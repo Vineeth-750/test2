@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember &amp; Bloom — Roasted in small batches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Work+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#1f1b18;
+    --roast:#4a2e22;
+    --cream:#f2e9dd;
+    --ember:#c4622d;
+    --sage:#8a9a7e;
+    --gold:#b8935b;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--charcoal);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.6;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation:none !important; transition:none !important;}
+  }
+
+  a{color:inherit;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--ember); outline-offset:3px;}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(242,233,221,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(31,27,24,0.1);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding-top:18px; padding-bottom:18px;}
+  .mark{font-family:'Fraunces', serif; font-weight:600; font-size:1.25rem; letter-spacing:0.01em;}
+  .mark span{color:var(--ember);}
+  .navlinks{display:flex; gap:28px; font-size:0.9rem; letter-spacing:0.02em;}
+  .navlinks a{text-decoration:none; opacity:0.75; transition:opacity 0.15s;}
+  .navlinks a:hover{opacity:1;}
+
+  /* HERO */
+  header.hero{
+    padding:96px 0 64px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{position:relative; z-index:1;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--roast);
+    opacity:0.8;
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(2.6rem, 6vw, 4.6rem);
+    line-height:1.03;
+    margin:0 0 26px;
+    max-width:11ch;
+    letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic; color:var(--ember); font-weight:300;}
+  .hero p.lead{
+    font-size:1.15rem;
+    max-width:46ch;
+    color:var(--roast);
+    margin:0 0 34px;
+  }
+  .beans{
+    position:absolute;
+    right:-40px; top:20px;
+    width:340px; opacity:0.9;
+    z-index:0;
+  }
+  @media (max-width:820px){ .beans{display:none;} }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--charcoal); color:var(--cream);
+    padding:14px 26px; border-radius:2px;
+    text-decoration:none; font-size:0.92rem; letter-spacing:0.03em;
+    border:1px solid var(--charcoal);
+    transition:background 0.18s, color 0.18s;
+  }
+  .btn:hover{background:transparent; color:var(--charcoal);}
+  .btn.ghost{background:transparent; color:var(--charcoal);}
+  .btn.ghost:hover{background:var(--charcoal); color:var(--cream);}
+
+  /* ROAST LOG - signature element */
+  section.log{padding:70px 0 90px; border-top:1px solid rgba(31,27,24,0.12);}
+  .log-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:36px; flex-wrap:wrap; gap:10px;}
+  .log-head h2{font-family:'Fraunces', serif; font-weight:500; font-size:1.8rem; margin:0;}
+  .log-head .cap{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; opacity:0.6;}
+
+  .roast-entry{
+    display:grid;
+    grid-template-columns:120px 1fr auto;
+    gap:24px;
+    align-items:start;
+    padding:22px 0;
+    border-top:1px solid rgba(31,27,24,0.14);
+  }
+  .roast-entry:last-child{border-bottom:1px solid rgba(31,27,24,0.14);}
+  .roast-date{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.82rem;
+    color:var(--roast);
+    padding-top:4px;
+  }
+  .roast-origin{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    font-weight:500;
+    margin:0 0 6px;
+  }
+  .roast-meta{font-size:0.88rem; color:var(--roast); opacity:0.85; margin:0 0 8px;}
+  .roast-notes{display:flex; gap:8px; flex-wrap:wrap;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border:1px solid var(--sage);
+    color:var(--roast);
+    border-radius:999px;
+  }
+  .roast-stamp{
+    align-self:center;
+    width:52px; height:52px;
+    border:1.5px solid var(--ember);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.65rem;
+    color:var(--ember);
+    text-align:center;
+    line-height:1.1;
+    transform:rotate(-8deg);
+  }
+  @media (max-width:640px){
+    .roast-entry{grid-template-columns:1fr; gap:8px;}
+    .roast-stamp{display:none;}
+  }
+
+  /* ABOUT */
+  section.about{padding:80px 0; background:var(--charcoal); color:var(--cream);}
+  .about .wrap{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  @media (max-width:820px){ .about .wrap{grid-template-columns:1fr;} }
+  section.about h2{font-family:'Fraunces', serif; font-weight:500; font-size:2.2rem; margin:0 0 20px;}
+  section.about p{color:#d8cfc2; max-width:52ch;}
+  .stat-row{display:flex; gap:40px; margin-top:30px;}
+  .stat b{display:block; font-family:'Fraunces', serif; font-size:1.9rem; color:var(--gold);}
+  .stat span{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; opacity:0.65;}
+
+  /* VISIT */
+  section.visit{padding:80px 0;}
+  .visit-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;}
+  @media (max-width:820px){ .visit-grid{grid-template-columns:1fr;} }
+  .visit-card{padding:26px; border:1px solid rgba(31,27,24,0.15); border-radius:2px;}
+  .visit-card h3{font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem; margin:0 0 10px;}
+  .visit-card p{font-size:0.92rem; margin:0; color:var(--roast);}
+
+  footer{padding:46px 0; border-top:1px solid rgba(31,27,24,0.14);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  footer .mark{font-size:1rem;}
+  footer .fine{font-family:'IBM Plex Mono', monospace; font-size:0.75rem; opacity:0.6;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="mark">Ember <span>&amp;</span> Bloom    <span>by Vineeth</span></div>
+    <div class="navlinks">
+      <a href="#log">Roast Log</a>
+      <a href="#about">About</a>
+      <a href="#visit">Visit</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Small-batch roastery — est. 2019</div>
+    <h1>Coffee roasted for the <em>slow</em> part of your morning.</h1>
+    <p class="lead">We roast eight kilos at a time, log every batch by hand, and sell it out most weeks. No blends, no shortcuts — just single origins taken exactly as far as they want to go.</p>
+    <a class="btn" href="#log">See this week's roast log →</a>
+  </div>
+  <svg class="beans" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="90" cy="90" rx="46" ry="32" fill="#4a2e22" opacity="0.9" transform="rotate(-20 90 90)"/>
+    <path d="M60 90 Q90 70 120 90" stroke="#1f1b18" stroke-width="3" fill="none" transform="rotate(-20 90 90)"/>
+    <ellipse cx="190" cy="150" rx="52" ry="36" fill="#c4622d" opacity="0.85" transform="rotate(15 190 150)"/>
+    <path d="M158 150 Q190 128 222 150" stroke="#1f1b18" stroke-width="3" fill="none" transform="rotate(15 190 150)"/>
+    <ellipse cx="120" cy="230" rx="40" ry="28" fill="#8a9a7e" opacity="0.7" transform="rotate(-8 120 230)"/>
+    <path d="M92 230 Q120 213 148 230" stroke="#1f1b18" stroke-width="2.5" fill="none" transform="rotate(-8 120 230)"/>
+  </svg>
+</header>
+
+<section class="log" id="log">
+  <div class="wrap">
+    <div class="log-head">
+      <h2>This week's roast log</h2>
+      <div class="cap">Logged by hand, batch by batch</div>
+    </div>
+
+    <div class="roast-entry">
+      <div class="roast-date">Aug 11</div>
+      <div>
+        <p class="roast-origin">Yirgacheffe, Ethiopia</p>
+        <p class="roast-meta">Washed · 1,950m · Gedeb cooperative</p>
+        <div class="roast-notes">
+          <span class="tag">Bergamot</span>
+          <span class="tag">Jasmine</span>
+          <span class="tag">Light roast</span>
+        </div>
+      </div>
+      <div class="roast-stamp">BATCH<br>014</div>
+    </div>
+
+    <div class="roast-entry">
+      <div class="roast-date">Aug 09</div>
+      <div>
+        <p class="roast-origin">Huila, Colombia</p>
+        <p class="roast-meta">Honey processed · 1,700m · Finca Betania</p>
+        <div class="roast-notes">
+          <span class="tag">Brown sugar</span>
+          <span class="tag">Red apple</span>
+          <span class="tag">Medium roast</span>
+        </div>
+      </div>
+      <div class="roast-stamp">BATCH<br>013</div>
+    </div>
+
+    <div class="roast-entry">
+      <div class="roast-date">Aug 06</div>
+      <div>
+        <p class="roast-origin">Ijen, Indonesia</p>
+        <p class="roast-meta">Wet-hulled · 1,400m · Bondowoso highlands</p>
+        <div class="roast-notes">
+          <span class="tag">Cedar</span>
+          <span class="tag">Dark cherry</span>
+          <span class="tag">Dark roast</span>
+        </div>
+      </div>
+      <div class="roast-stamp">BATCH<br>012</div>
+    </div>
+    <div class="roast-entry">
+      <div class="roast-date">Aug 06</div>
+      <div>
+        <p class="roast-origin">kerala, India</p>
+        <p class="roast-meta">Wet-hulled · 1,400m · Bondowoso highlands</p>
+        <div class="roast-notes">
+          <span class="tag">Cedar</span>
+          <span class="tag">Dark cherry</span>
+          <span class="tag">Dark roast</span>
+        </div>
+      </div>
+      <div class="roast-stamp">BATCH<br>012</div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" style="color:var(--gold);">The short version</div>
+      <h2>One roaster, one drum, one batch at a time.</h2>
+      <p>Ember &amp; Bloom started in a garage with a 1kg sample roaster and a notebook. The notebook's still going — every batch gets a date, an origin, and honest tasting notes before it goes on the shelf.</p>
+      <div class="stat-row">
+        <div class="stat"><b>8kg</b><span>Per batch</span></div>
+        <div class="stat"><b>3</b><span>Origins in rotation</span></div>
+        <div class="stat"><b>014</b><span>Batches this year</span></div>
+      </div>
+    </div>
+    <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="150" cy="130" r="100" fill="none" stroke="#b8935b" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="150" cy="130" r="60" fill="#4a2e22"/>
+      <rect x="130" y="30" width="40" height="60" rx="6" fill="#c4622d"/>
+      <rect x="140" y="10" width="20" height="30" rx="4" fill="#8a9a7e"/>
+    </svg>
+  </div>
+</section>
+
+<section class="visit" id="visit">
+  <div class="wrap">
+    <div class="eyebrow">Find us</div>
+    <h2 style="font-family:'Fraunces', serif; font-weight:500; font-size:2rem; margin:6px 0 30px;">Come sit with a slow cup.</h2>
+    <div class="visit-grid">
+      <div class="visit-card">
+        <h3>The counter</h3>
+        <p>14 Millrace Lane, open Tuesday–Sunday, 7am–2pm. Pour-over and espresso, no syrups.</p>
+      </div>
+      <div class="visit-card">
+        <h3>Take a bag home</h3>
+        <p>250g bags of whatever's currently in the log, ground to order or whole bean.</p>
+      </div>
+      <div class="visit-card">
+        <h3>Subscribe</h3>
+        <p>A new origin dropped at your door every two weeks. Pause or cancel any time.</p>
+      </div>
+    </div>
+    <div style="margin-top:36px;">
+      <a class="btn ghost" href="#">Get in touch →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mark">Ember <span style="color:var(--ember);">&amp;</span> Bloom</div>
+    <div class="fine">© 2026 Ember &amp; Bloom Roastery. Roasted, not rushed.</div>
+  </div>
+</footer>
+
+</body>
+</html>
