@@ -27,9 +27,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/my-website:${{ github.sha }} \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/my-website:latest \
-            .
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/my-website:${{ github.sha }} -t ${{ secrets.DOCKERHUB_USERNAME }}/my-website:latest .
 
       - name: Push Docker image
         run: |
